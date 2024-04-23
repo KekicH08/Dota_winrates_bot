@@ -24,7 +24,7 @@ async def best_worst_pos_winrate(hero_name, bracket_id):
     matches = []
     hero_id = hero_names[hero_name.lower()]
     tasks = []
-    session = aiohttp.ClientSession()
+    session = aiohttp.ClientSession(trust_env=True)
 
     for i in range(1, 6):
         query = f'''
@@ -62,7 +62,7 @@ async def best_worst_pos_winrate(hero_name, bracket_id):
             'worst': [winrates.index(worst) + 1, worst, matches[winrates.index(worst)]]}
 
 
-# print(asyncio.run(best_worst_pos_winrate('axe', 'герой')))
+# print(asyncio.run(best_worst_pos_winrate('axe', 'HERALD')))
 
 
 async def most_popular_characters_for_pos(position_id, bracket_id):
@@ -71,7 +71,7 @@ async def most_popular_characters_for_pos(position_id, bracket_id):
     winrates = {}
     matches = {}
     tasks = []
-    session = aiohttp.ClientSession()
+    session = aiohttp.ClientSession(trust_env=True)
 
     for i in hero_ids.keys():
         query = f'''
