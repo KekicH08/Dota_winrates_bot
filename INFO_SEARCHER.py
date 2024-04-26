@@ -73,13 +73,12 @@ async def most_popular_characters_for_pos(position_id, bracket_id):
     tasks = []
     session = aiohttp.ClientSession(trust_env=True)
 
-    for i in hero_ids.keys():
-        query = f'''
+    query = f'''
                             {{
                                 heroStats {{
                                     winWeek(
                                         take: 1,
-                                        heroIds: [{i}]
+                                        heroIds: [{', '.join([str(i) for i in hero_ids.keys()])}]
                                         bracketIds: [{bracket_id.upper()}],
                                         positionIds: [POSITION_{position_id}],
                                         gameModeIds: [ALL_PICK_RANKED]
@@ -91,18 +90,13 @@ async def most_popular_characters_for_pos(position_id, bracket_id):
                                 }}
                             }}
                         '''
-        tasks.append(asyncio.create_task(make_request(query, session)))
-        await asyncio.sleep(0.1)
-    await asyncio.gather(*tasks)
+    data = await make_request(query, session)
     await session.close()
+    print(data)
 
-    for i in data:
-        winrates.update(
-            {i['data']['heroStats']['winWeek'][0]['heroId']: round(
-                i['data']['heroStats']['winWeek'][0]['winCount'] / i['data']['heroStats']['winWeek'][0][
-                    'matchCount'] * 100, 2)})
-        matches.update(
-            {i['data']['heroStats']['winWeek'][0]['matchCount']: i['data']['heroStats']['winWeek'][0]['heroId']})
+    for i in data[0]['data']['heroStats']['winWeek']:
+        winrates.update({i['heroId']: round(i['winCount'] / i['matchCount'] * 100, 2)})
+        matches.update({i['matchCount']: i['heroId']})
 
     return {1: [
         hero_ids_default[matches[sorted(matches)[-1]]], sorted(matches)[-1], winrates[matches[sorted(matches)[-1]]]],
