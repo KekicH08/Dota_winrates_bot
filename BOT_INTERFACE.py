@@ -363,8 +363,8 @@ async def send_picture(update, context, url):
 async def stop(update, context):
     global markup
     context.user_data.clear()
-    markup = ReplyKeyboardMarkup([])
-    await update.message.reply_text("Всего доброго! Чтобы начать заново, введите команду /start")
+    markup = ReplyKeyboardMarkup([['/start']])
+    await update.message.reply_text("Всего доброго! Чтобы начать заново, введите команду /start", reply_markup=markup)
     return ConversationHandler.END
 
 
