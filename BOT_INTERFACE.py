@@ -97,7 +97,7 @@ async def search(update, context):
     elif update.message.text == 'Найти сборку предметов':
         query = f"""SELECT guide_name, rank, hero, position, likes
                     FROM Items_guides
-                    ORDER BY likes"""
+                    ORDER BY likes DESC"""
         cursor = sqlite_connection.cursor()
         response = cursor.execute(query).fetchall()
         sqlite_connection.commit()
@@ -399,7 +399,6 @@ def main():
     )
 
     application.add_handler(conv_handler)
-
     asyncio.run(application.run_polling())
 
 
