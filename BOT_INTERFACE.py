@@ -315,7 +315,7 @@ async def guide(update, context):
         await update.message.reply_text(f"Название: {response[0]}\n"
                                         f"Ранг:  {response[1]}\n"
                                         f"Герой: {response[2]}\n"
-                                        f"Позиции: {response[3]}\n"
+                                        f"Позиция: {response[3]}\n"
                                         f"Предметы: {response[4]}\n"
                                         f"Понравилось: {response[5]}\n")
 
