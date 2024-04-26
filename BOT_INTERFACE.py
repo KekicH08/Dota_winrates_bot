@@ -96,7 +96,8 @@ async def search(update, context):
 
     elif update.message.text == 'Найти сборку предметов':
         query = f"""SELECT guide_name, rank, hero, position, likes
-                    FROM Items_guides"""
+                    FROM Items_guides
+                    ORDER BY likes"""
         cursor = sqlite_connection.cursor()
         response = cursor.execute(query).fetchall()
         sqlite_connection.commit()
