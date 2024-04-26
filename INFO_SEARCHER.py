@@ -1,7 +1,7 @@
 import asyncio
 import aiohttp
 
-from HERO_MAP import hero_ids, hero_names, hero_ids_default, brackets
+from HERO_MAP import hero_ids, hero_names, hero_ids_default
 from TOKEN import token
 
 headers = {
