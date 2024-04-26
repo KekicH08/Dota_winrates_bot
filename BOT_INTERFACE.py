@@ -238,11 +238,15 @@ async def searcher_by_pos(update, context):
     await update.message.reply_text(
         f"Скоро ответим")
     answer = await most_popular_characters_for_pos(pos, rank)
+    url = "_".join(f'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/'
+                   f'{answer[1][0].lower()}.png'.split())
+    print(url)
     await update.message.reply_text(
-        f"Самая популярные герои за последнюю неделю на {pos} pos, ранг {rank}:\n\n"
-        f"1 - {answer[1][0]}, кол-во игр: {answer[1][1]}, доля побед: {answer[1][2]}%\n\n"
-        f"2 - {answer[2][0]}, кол-во игр: {answer[2][1]}, доля побед: {answer[2][2]}%\n\n"
-        f"3 - {answer[3][0]}, кол-во игр: {answer[3][1]}, доля побед: {answer[3][2]}%")
+                                    f"Самая популярные герои за последнюю неделю на {pos} pos, ранг {rank}:\n\n"
+                                    f"1 - {answer[1][0]}, кол-во игр: {answer[1][1]}, доля побед: {answer[1][2]}%\n\n"
+                                    f"2 - {answer[2][0]}, кол-во игр: {answer[2][1]}, доля побед: {answer[2][2]}%\n\n"
+                                    f"3 - {answer[3][0]}, кол-во игр: {answer[3][1]}, доля побед: {answer[3][2]}%",
+                                    await send_picture(update, context, url))
 
     markup = ReplyKeyboardMarkup([['Лучшие герои на позицию'],
                                   ['Лучшая позиция для героя'],
@@ -352,6 +356,10 @@ async def like_guide(update, context):
     return 2
 
 
+async def send_picture(update, context, url):
+    await context.bot.send_photo(update.message.chat.id, photo=url)
+
+
 async def stop(update, context):
     global markup
     context.user_data.clear()
@@ -372,8 +380,6 @@ def main():
         # В данном случае — команда /start. Она задаёт первый вопрос.
         entry_points=[CommandHandler('start', start)],
 
-        # Состояние внутри диалога.
-        # Вариант с двумя обработчиками, фильтрующими текстовые сообщения.
         states={
             1: [MessageHandler(filters.TEXT & ~filters.COMMAND, first_response)],
             2: [MessageHandler(filters.TEXT & ~filters.COMMAND, search)],
